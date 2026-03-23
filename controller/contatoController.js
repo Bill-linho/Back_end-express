@@ -1,13 +1,13 @@
 import * as module from '../model/contatosModel.js';
 
-export function listar(req, res){
-    const todaLista = module.listarContatos();
+export async function listar(req, res){
+    const todaLista = await module.listarContatos();
+    console.log(todaLista)
     res.status(200).json(todaLista);
 }
 
-export function buscarPorID (req, res){
-    const { id } = req.params;
-    const resultadoContato = module.buscarContatoID(id);
+export async function buscarPorID (req, res){
+    const resultadoContato = await module.buscarContatoID(id);
     // Tratamento do resultado
     if (!resultadoContato){
         res.satus(404).json({ erro: "Usuairo não existe!"})
