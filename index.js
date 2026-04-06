@@ -1,17 +1,12 @@
 import express from 'express';
 import 'dotenv/config'
-import * as controller from './controller/contatoController'
+import Router from './router/contatosRouter.js';
 
 const app = express();
 app.use(express.json());
-//rotas privadas
-app.get('/', controller.buscarPorID);
-app.get('/:id', controller.buscarPorID);
-
-//rotas publicas
-app.post('/cadastrar', controller.criarContato);
-app.post('/login', controller.login);
-
+app.use('/contatos', Router);
+// app.get('/contatos/:id', controller.buscarPorID);
+// app.post('/contatos', controller.criarContato);
 const PORT = process.env.SERVE_PORT;
 
 app.listen(PORT, () => {

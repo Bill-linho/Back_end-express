@@ -28,7 +28,7 @@ export async function cadastrarContato(nome, telefone, email, senha_hash) {
   try {
     const inserirContatoDb = await pool.query(`
             INSERT INTO Contatos (nome, telefone, email, senha_hash)
-            VALUES ('${nome}', '${telefone}', '${email}', '${senha_hash}) 
+            VALUES ('${nome}', '${telefone}', '${email}', '${senha_hash}') 
             RETURNING id, nome, telefone, email
         `);
 
@@ -41,12 +41,12 @@ export async function cadastrarContato(nome, telefone, email, senha_hash) {
 
 export async function loginModulo(email,senha) {
     try {
-        const carregaUser = await pool.query(`SELECT * FROM contatos WHERE email=${email}`,email)
+        const carregaUser = await pool.query(`SELECT * FROM contatos WHERE email=$1`,[email])
 
-        const resLogin = await bcrypt.compare(senha, carregaUser.rows.senha_hash)
+        const resLogin = await bcrypt.compare(senha, carregaUser.rows[0].senha_hash)
         
         return resLogin
-        
+
     } catch (error) {
     console.log("Erro ao consultar no banco de dados: ", error);
     return error;

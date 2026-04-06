@@ -27,7 +27,7 @@ export async function criarContato(req, res) {
     } else {
         const senha_hash = await bcrypt.hash(senha,10)
 
-        const novoContato = module.cadastrarContato(nome, telefone, email, senha_hash);
+        const novoContato = await module.cadastrarContato(nome, telefone, email, senha_hash);
         res.status(201).json(novoContato);
 
     }
@@ -43,15 +43,18 @@ export async function login(req, res) {
     const cadastrar = await module.loginModulo(email, senha)
     if(cadastrar == false ){
         return res.status(401).json({error:'Faz o L'})
+
     }else if( cadastrar == true){
         
         const token = JWT.sign(
             {email: email},
-            process.
+            process.env.JWT_SECRET,
+            {expiresIn: process.env.JWT_EXPIRES_IN}
         )
 
+        return res.status(200).json(token)
     }else{
-        return res.satus(404).json({ erro: "Erro" })
+        return res.status(404).json({ erro: "Erro" })
     }
 
 }
