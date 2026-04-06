@@ -1,5 +1,6 @@
 import * as module from '../model/contatosModel.js';
 import bcrypt from 'bcrypt'
+import JWT from 'jsonwebtoken'
 
 export async function listar(req, res) {
     const todaLista = await module.listarContatos();
@@ -28,5 +29,29 @@ export async function criarContato(req, res) {
 
         const novoContato = module.cadastrarContato(nome, telefone, email, senha_hash);
         res.status(201).json(novoContato);
+
     }
+}
+
+export async function login(req, res) {
+    const { email, senha } = req.body; 
+
+    if(!email || !senha){
+        res.status(422).json({ mensagem:'Dados imcompletos'})
+    } 
+     
+    const cadastrar = await module.loginModulo(email, senha)
+    if(cadastrar == false ){
+        return res.status(401).json({error:'Faz o L'})
+    }else if( cadastrar == true){
+        
+        const token = JWT.sign(
+            {email: email},
+            process.
+        )
+
+    }else{
+        return res.satus(404).json({ erro: "Erro" })
+    }
+
 }
