@@ -25,7 +25,7 @@ export async function criarContato(req, res) {
     if (!nome || !telefone || !email || !senha) {
         res.status(422).json({ mensagem: "Dados incompletos!" })
     } else {
-        const senha_hash = await bcrypt.hash(senha,10)
+        const senha_hash = await bcrypt.hash(senha, 10)
 
         const novoContato = await module.cadastrarContato(nome, telefone, email, senha_hash);
         res.status(201).json(novoContato);
@@ -34,27 +34,40 @@ export async function criarContato(req, res) {
 }
 
 export async function login(req, res) {
-    const { email, senha } = req.body; 
+    const { email, senha } = req.body;
 
-    if(!email || !senha){
-        res.status(422).json({ mensagem:'Dados imcompletos'})
-    } 
-     
+    if (!email || !senha) {
+        res.status(422).json({ mensagem: 'Dados imcompletos' })
+    }
+
     const cadastrar = await module.loginModulo(email, senha)
-    if(cadastrar == false ){
-        return res.status(401).json({error:'Faz o L'})
+    if (cadastrar == false) {
+        return res.status(401).json({ error: 'Faz o L' })
 
-    }else if( cadastrar == true){
-        
+    } else if (cadastrar == true) {
+
         const token = JWT.sign(
-            {email: email},
+            { email: email },
             process.env.JWT_SECRET,
-            {expiresIn: process.env.JWT_EXPIRES_IN}
+            { expiresIn: process.env.JWT_EXPIRES_IN }
         )
 
         return res.status(200).json(token)
-    }else{
+    } else {
         return res.status(404).json({ erro: "Erro" })
     }
 
+}
+
+export async function perfilauthentical(req, res) {
+    const { email } = req.body;
+    console.log("Puxando Perfil, ", email)
+
+    if (!email) {
+        return res.status(422).json({ mensagem: 'Dados imcompletos' })
+    }
+
+    const resPerfil = await module.perfilModule(email)
+
+    res.status(200).json(resPerfil)
 }
